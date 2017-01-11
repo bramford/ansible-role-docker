@@ -1,6 +1,9 @@
 # Ansible Role: docker
 
+[![Build Status](https://travis-ci.org/bramford/ansible-role-docker.svg?branch=master)](https://travis-ci.org/bramford/ansible-role-docker)
+
 Ansible role that installs docker, docker-compose and all required dependencies on Debian, RHEL/CentOS and Ubuntu.
+
 
 ## Supported Operating Systems
 
