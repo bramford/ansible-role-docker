@@ -1,0 +1,19 @@
+---
+docker_apt_key_server: "hkp://p80.pool.sks-keyservers.net:80"
+docker_apt_key_id: "58118E89F3A912897C070ADBF76221572C52609D"
+
+docker_group: docker
+
+docker_pip_compose: yes
+docker_pip_py: yes
+
+# Optionally configure docker daemon startup options
+#docker_startup_options: "--graph="/mnt/docker-data" --storage-driver=overlay"
+
+docker_service_name: docker
+docker_service_state: "started"
+docker_service_enabled: yes
+
+# Allow non-root users to run docker
+#docker_users:
+#- username

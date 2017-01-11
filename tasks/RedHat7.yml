@@ -1,0 +1,22 @@
+---
+- name: Add docker yum repo
+  template:
+    src: docker.repo.j2
+    dest: /etc/yum.repos.d/docker.repo
+  become: yes
+  register: add_docker_repo
+  tags: ["docker","yum"]
+
+- name: Update yum cache
+  yum:
+    update_cache: yes
+  become: yes
+  when: add_docker_repo.changed == True
+  tags: ["docker","yum","skip_ansible_lint"]
+
+- name: Install docker with yum
+  yum:
+    name: "docker-engine"
+    state: present
+  become: yes
+  tags: ["docker","yum"]

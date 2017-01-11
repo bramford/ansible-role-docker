@@ -1,0 +1,77 @@
+---
+- include: RedHat6.yml
+  when: (ansible_os_family == "RedHat") and
+        (ansible_distribution_major_version|int == 6)
+
+- include: RedHat7.yml
+  when: (ansible_os_family == "RedHat") and
+        (ansible_distribution_major_version|int == 7)
+
+- include: Debian.yml
+  when: (ansible_distribution == "Debian") and
+        (ansible_distribution_major_version|int >= 7)
+
+- include: Ubuntu.yml
+  when: (ansible_distribution == "Ubuntu") and
+        (ansible_distribution_major_version|int >= 12)
+
+- name: Install docker-compose with pip
+  pip:
+    name: docker-compose
+  become: yes
+  when: docker_pip_compose|bool == True
+  tags: ["docker","pip"]
+
+- name: Install docker-py with pip
+  pip:
+    name: docker-py
+  become: yes
+  when: docker_pip_py|bool == True
+  tags: ["docker","pip"]
+
+- name: Configure dockerd systemd config
+  template:
+    src: docker-systemd.conf.j2
+    dest: /etc/systemd/system/docker.service.d/docker.conf
+  become: yes
+  notify:
+    - systemctl daemon-reload
+    - restart docker
+  when: (ansible_service_mgr == "systemd") and
+        (docker_startup_options is defined) and
+        (docker_startup_options != "")
+  tags: ["docker","configuration"]
+
+- block:
+    - name: Create docker group
+      group:
+        name: "{{ docker_group }}"
+      become: yes
+      notify: restart docker
+      tags: ["docker","group"]
+    - name: Add user to docker group
+      user:
+        name: "{{ item }}"
+        append: yes
+        groups: "{{ docker_group }}"
+      with_items: "{{ docker_users }}"
+      become: yes
+      notify: restart docker
+      tags: ["docker","user"]
+  when: (docker_users is defined) and
+        (docker_users|count > 0)
+
+- name: Enable or disable docker
+  service:
+    name: "{{ docker_service_name }}"
+    enabled: "{{ docker_service_enabled }}"
+  become: yes
+  tags: ["docker","service"]
+
+- name: Start or stop docker
+  service:
+    name: "{{ docker_service_name }}"
+    state: "{{ docker_service_state }}"
+  become: yes
+  register: start_stop_docker
+  tags: ["docker","service"]

@@ -1,0 +1,24 @@
+galaxy_info:
+  author: Bramford Horton
+  description: Docker installation
+  license: MIT
+  min_ansible_version: 2.1
+  platforms:
+    - name: Ubuntu
+      versions:
+        - precise
+        - trusty
+        - wily
+        - xenial
+    - name: Debian
+      versions:
+        - jessie
+        - stretch
+        - wheezy
+    - name: EL
+      versions:
+        - 6
+        - 7
+  galaxy_tags:
+    - docker
+dependencies: []

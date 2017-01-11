@@ -1,0 +1,24 @@
+---
+- name: Install epel with yum
+  yum:
+    name: epel-release
+    state: present
+  become: yes
+  tags: ["docker","yum"]
+
+- name: Install docker with yum
+  yum:
+    name: "docker-io"
+    state: present
+  become: yes
+  tags: ["docker","yum"]
+
+- name: Configure docker service config
+  template:
+    src: docker-sysconfig.j2
+    dest: /etc/sysconfig/docker
+  become: yes
+  notify: restart docker
+  when: (docker_startup_options is defined) and
+        (docker_startup_options != "")
+  tags: ["docker","configuration"]

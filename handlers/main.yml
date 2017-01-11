@@ -1,0 +1,26 @@
+---
+- name: systemctl daemon-reload
+  shell: >
+    systemctl daemon-reload
+  become: yes
+  tags: ["docker","service","skip_ansible_lint"]
+
+- name: restart docker
+  service:
+    name: "{{ docker_service_name }}"
+    state: restarted
+  when: ((start_stop_docker is defined and start_stop_docker.changed == False) or start_stop_docker is not defined) and
+        (docker_service_state == "started")
+  become: yes
+  register: restart_docker
+  tags: ["docker","service","skip_ansible_lint"]
+
+- name: reload docker
+  service:
+    name: "{{ docker_service_name }}"
+    state: reloaded
+  become: yes
+  when: (((start_stop_docker is defined and start_stop_docker.changed == False) or start_stop_docker is not defined) and
+        ((restart_docker is defined and restart_docker.changed == False) or restart_docker is not defined)) and
+        (docker_service_state == "started")
+  tags: ["docker","service","skip_ansible_lint"]

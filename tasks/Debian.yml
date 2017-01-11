@@ -1,0 +1,43 @@
+---
+- name: Add docker apt source
+  lineinfile:
+    dest: /etc/apt/sources.list.d/docker.list
+    line: "deb https://apt.dockerproject.org/repo debian-{{ ansible_lsb.codename }} main"
+    create: yes
+  become: yes
+  register: add_docker_apt_source
+  tags: ["docker","apt"]
+
+- name: Add apt keys
+  apt_key:
+    keyserver: "{{ docker_apt_key_server }}"
+    id: "{{ docker_apt_key_id }}"
+    state: present
+  become: yes
+  tags: ["docker","apt"]
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+  become: yes
+  when: add_docker_apt_source.changed == True
+  tags: ["docker","apt","skip_ansible_lint"]
+
+- name: Purge old docker installations
+  apt:
+    name: "{{ item }}"
+    state: absent
+    purge: yes
+  with_items:
+    - "lxc-docker*"
+    - "docker.io*"
+  become: yes
+  tags: ["docker","apt"]
+
+- name: Install docker engine
+  apt:
+    name: docker-engine
+    state: present
+    force: yes
+  become: yes
+  tags: ["docker","apt"]
