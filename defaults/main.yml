@@ -15,5 +15,6 @@ docker_service_state: "started"
 docker_service_enabled: yes
 
 # Allow non-root users to run docker
-#docker_users:
-#- username
+docker_users: [
+# "username"
+]

@@ -42,24 +42,22 @@
         (docker_startup_options != "")
   tags: ["docker","configuration"]
 
-- block:
-    - name: Create docker group
-      group:
-        name: "{{ docker_group }}"
-      become: yes
-      notify: restart docker
-      tags: ["docker","group"]
-    - name: Add user to docker group
-      user:
-        name: "{{ item }}"
-        append: yes
-        groups: "{{ docker_group }}"
-      with_items: "{{ docker_users }}"
-      become: yes
-      notify: restart docker
-      tags: ["docker","user"]
-  when: (docker_users is defined) and
-        (docker_users|count > 0)
+- name: Create docker group
+  group:
+    name: "{{ docker_group }}"
+  become: yes
+  notify: restart docker
+  tags: ["docker","groups"]
+
+- name: Add users to docker group
+  user:
+    name: "{{ item }}"
+    append: yes
+    groups: "{{ docker_group }}"
+  with_items: "{{ docker_users }}"
+  become: yes
+  notify: restart docker
+  tags: ["docker","users"]
 
 - name: Enable or disable docker
   service:

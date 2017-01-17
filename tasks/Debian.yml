@@ -1,8 +1,19 @@
 ---
+- name: Install dependency packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  become: yes
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - python-pip
+  tags: ["docker","apt"]
+
 - name: Add docker apt source
   lineinfile:
     dest: /etc/apt/sources.list.d/docker.list
-    line: "deb https://apt.dockerproject.org/repo debian-{{ ansible_lsb.codename }} main"
+    line: "deb https://apt.dockerproject.org/repo {{ ansible_distribution|lower }}-{{ ansible_lsb.codename }} main"
     create: yes
   become: yes
   register: add_docker_apt_source
@@ -16,7 +27,7 @@
   become: yes
   tags: ["docker","apt"]
 
-- name: Update apt cache
+- name: Update apt cache if docker apt source added
   apt:
     update_cache: yes
   become: yes
@@ -31,6 +42,9 @@
   with_items:
     - "lxc-docker*"
     - "docker.io*"
+  register: purge_old_docker_installations
+  failed_when: (purge_old_docker_installations.failed == True) and
+               (purge_old_docker_installations.msg|search('No\ package\(s\)\ matching.*available') == False)
   become: yes
   tags: ["docker","apt"]
 
