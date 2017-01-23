@@ -1,4 +1,17 @@
 ---
+- name: Remove default python-pip
+  apt:
+    name: "python-pip"
+    state: absent
+  become: yes
+  tags: ["docker","apt"]
+
+- name: Install pip with easy_install
+  easy_install:
+    name: "pip"
+  become: yes
+  tags: ["docker","apt"]
+
 - name: Install dependency packages
   apt:
     name: "{{ item }}"
@@ -7,7 +20,6 @@
   with_items:
     - apt-transport-https
     - ca-certificates
-    - python-pip
   tags: ["docker","apt"]
 
 - name: Add docker apt source
