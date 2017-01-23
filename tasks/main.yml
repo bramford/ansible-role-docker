@@ -18,6 +18,7 @@
 - name: Install docker-compose with pip
   pip:
     name: docker-compose
+    version: 1.9.0
   become: yes
   when: docker_pip_compose|bool == True
   tags: ["docker","pip","docker-compose"]
@@ -27,14 +28,15 @@
     path: /usr/local/bin/docker-compose
     mode: 0777
   become: yes
+  when: docker_pip_compose|bool == True
   tags: ["docker","docker-compose"]
 
-- name: Install docker-py with pip
+- name: Install docker python library with pip
   pip:
     name: docker-py
   become: yes
   when: docker_pip_py|bool == True
-  tags: ["docker","pip","docker-py"]
+  tags: ["docker","pip"]
 
 - name: Configure dockerd systemd config
   template:
