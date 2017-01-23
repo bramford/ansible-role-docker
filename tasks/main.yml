@@ -20,14 +20,21 @@
     name: docker-compose
   become: yes
   when: docker_pip_compose|bool == True
-  tags: ["docker","pip"]
+  tags: ["docker","pip","docker-compose"]
+
+- name: Correct docker-compose executable permission
+  file:
+    path: /usr/local/bin/docker-compose
+    mode: 0777
+  become: yes
+  tags: ["docker","docker-compose"]
 
 - name: Install docker-py with pip
   pip:
     name: docker-py
   become: yes
   when: docker_pip_py|bool == True
-  tags: ["docker","pip"]
+  tags: ["docker","pip","docker-py"]
 
 - name: Configure dockerd systemd config
   template:
