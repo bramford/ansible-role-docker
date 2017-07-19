@@ -18,7 +18,7 @@
 - name: Install docker-compose with pip
   pip:
     name: docker-compose
-    version: 1.9.0
+    version: "{{ docker_pip_compose_version }}"
   become: yes
   when: docker_pip_compose|bool == True
   tags: ["docker","pip","docker-compose"]
