@@ -1,4 +1,5 @@
-# Ansible Role: docker
+Ansible Role: docker
+----------------------
 
 [![Build Status](https://travis-ci.org/bramford/ansible-role-docker.svg?branch=master)](https://travis-ci.org/bramford/ansible-role-docker)
 
@@ -9,9 +10,8 @@ Ansible role that installs docker, docker-compose and all required dependencies 
 
 - RHEL/CentOS 6 (untested)
 - RHEL/CentOS 7 (untested)
-- Debian 7/8
-- Debian 9 (current debian 'testing' release)
-- Ubuntu 12.04+ (untested)
+- Debian 7/8/9
+- Ubuntu 12.04+
 
 ## Requirements
 
@@ -27,7 +27,7 @@ See `./defaults/main.yml` for configurable variables and their defaults
     - name: Example play
       hosts: all
       roles:
-        - { docker }
+        - { role: docker }
 
 ## Example playbook (with some optional vars set)
 
@@ -35,7 +35,7 @@ See `./defaults/main.yml` for configurable variables and their defaults
     - name: Example play with optional vars set
       hosts: all
       roles:
-        - { docker,
+        - { role: docker,
             docker_users: ["derp"],
             docker_compose: no,
             docker_service_state: "stopped",
