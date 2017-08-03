@@ -5,7 +5,7 @@ docker_apt_key_id: "58118E89F3A912897C070ADBF76221572C52609D"
 docker_group: docker
 
 docker_pip_compose: yes
-docker_pip_compose_version: 1.9.0
+docker_pip_compose_version: 1.14.0
 docker_pip_py: yes
 
 # Optionally configure docker daemon startup options
