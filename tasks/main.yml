@@ -15,6 +15,24 @@
   when: (ansible_distribution == "Ubuntu") and
         (ansible_distribution_major_version|int >= 12)
 
+- name: Remove docker-py pip module
+  pip:
+    name: docker-py
+    state: absent
+  become: yes
+  register: remove_docker_py
+  when: docker_pip_py|bool
+  tags: ["docker","pip"]
+
+- name: Remove docker pip module
+  pip:
+    name: docker
+    state: absent
+  become: yes
+  when: (docker_pip_py|bool) and
+        (remove_docker_py.changed)
+  tags: ["docker","pip"]
+
 - name: Install docker-compose with pip
   pip:
     name: docker-compose
@@ -30,13 +48,6 @@
   become: yes
   when: docker_pip_compose|bool == True
   tags: ["docker","docker-compose"]
-
-- name: Install docker python library with pip
-  pip:
-    name: docker-py
-  become: yes
-  when: docker_pip_py|bool == True
-  tags: ["docker","pip"]
 
 - name: Configure dockerd systemd config
   template:
