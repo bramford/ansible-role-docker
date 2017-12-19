@@ -36,7 +36,8 @@
 - name: Install docker-compose with pip
   pip:
     name: docker-compose
-    version: "{{ docker_pip_compose_version }}"
+    version: "{{ docker_pip_compose_version|default(omit) }}"
+    state: present
   become: yes
   when: docker_pip_compose|bool == True
   tags: ["docker","pip","docker-compose"]
