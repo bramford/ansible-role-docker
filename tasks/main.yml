@@ -63,6 +63,16 @@
         (docker_startup_options != "")
   tags: ["docker","configuration"]
 
+- name: Configure docker metrics publishing
+  template:
+    src: docker-daemon.json.j2
+    dest: /etc/docker/daemon.json
+  become: yes
+  notify:
+    - restart docker
+  when: docker_metrics_enabled
+  tags: ["docker","configuration"]
+
 - name: Create docker group
   group:
     name: "{{ docker_group }}"
@@ -94,3 +104,5 @@
   become: yes
   register: start_stop_docker
   tags: ["docker","service"]
+
+- meta: flush_handlers
