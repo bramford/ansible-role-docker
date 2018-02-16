@@ -8,10 +8,9 @@ Ansible role that installs docker, docker-compose and all required dependencies 
 
 ## Supported Operating Systems
 
-- RHEL/CentOS 6 (untested)
-- RHEL/CentOS 7 (untested)
-- Debian 7/8/9
-- Ubuntu 12.04+
+- RHEL/CentOS 7 (Untested)
+- Debian 8+
+- Ubuntu 14.04+ (Untested)
 
 ## Requirements
 
