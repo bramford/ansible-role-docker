@@ -8,6 +8,9 @@
     - apt-transport-https
     - ca-certificates
     - python-setuptools
+    - curl
+    - gnupg2
+    - software-properties-common
   tags: ["docker","apt"]
 
 - name: Remove default python-pip
@@ -23,47 +26,57 @@
   become: yes
   tags: ["docker","apt"]
 
-- name: Add docker apt source
+- name: Remove old docker apt source(s)
   lineinfile:
     dest: /etc/apt/sources.list.d/docker.list
-    line: "deb https://apt.dockerproject.org/repo {{ ansible_distribution|lower }}-{{ ansible_lsb.codename }} main"
-    create: yes
+    regexp: ".*apt.dockerproject.org/repo.*"
+    state: absent
   become: yes
-  register: add_docker_apt_source
+  register: remove_old_docker_apt_source
   tags: ["docker","apt"]
 
-- name: Add apt keys
+- name: Add apt key
   apt_key:
-    keyserver: "{{ docker_apt_key_server }}"
-    id: "{{ docker_apt_key_id }}"
-    state: present
+    url: "https://download.docker.com/linux/{{ ansible_lsb.id|lower }}/gpg"
   become: yes
+  register: add_apt_key
+  tags: ["docker","apt"]
+
+- name: Add docker apt source
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_lsb.id|lower }} {{ ansible_lsb.codename }} stable"
+    filename: docker
+  become: yes
+  register: add_docker_apt_source
   tags: ["docker","apt"]
 
 - name: Update apt cache if docker apt source added
   apt:
     update_cache: yes
   become: yes
-  when: add_docker_apt_source.changed == True
+  when: (add_docker_apt_source.changed) or
+        (remove_old_docker_apt_source.changed) or
+        (add_apt_key.changed)
   tags: ["docker","apt","skip_ansible_lint"]
 
-- name: Purge old docker installations
+- name: Remove old docker installations
   apt:
     name: "{{ item }}"
     state: absent
-    purge: yes
   with_items:
     - "lxc-docker*"
     - "docker.io*"
-  register: purge_old_docker_installations
-  failed_when: (purge_old_docker_installations.failed == True) and
-               (purge_old_docker_installations.msg|search('No\ package\(s\)\ matching.*available') == False)
+    - "docker-engine"
+    - "docker"
+  register: remove_old_docker_installations
+  failed_when: (remove_old_docker_installations.failed) and
+               (not remove_old_docker_installations.msg|search('No\ package\(s\)\ matching.*available'))
   become: yes
   tags: ["docker","apt"]
 
-- name: Install docker engine
+- name: Install docker community edition
   apt:
-    name: docker-engine
+    name: docker-ce
     state: present
     force: yes
   become: yes
