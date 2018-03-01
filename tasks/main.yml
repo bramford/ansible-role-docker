@@ -24,13 +24,13 @@
   when: docker_pip_py|bool
   tags: ["docker","pip"]
 
-- name: Remove docker pip module
+- name: Install docker pip module
   pip:
     name: docker
-    state: absent
+    version: "{{ docker_pip_version|default(omit) }}"
+    state: present
   become: yes
-  when: (docker_pip_py|bool) and
-        (remove_docker_py.changed)
+  when: docker_pip_py|bool
   tags: ["docker","pip"]
 
 - name: Install docker-compose with pip
