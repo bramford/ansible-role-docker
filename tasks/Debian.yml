@@ -63,16 +63,13 @@
   apt:
     name: "{{ item }}"
     state: absent
-  with_items:
-    - "lxc-docker*"
-    - "docker.io*"
-    - "docker-engine"
-    - "docker"
-  register: remove_old_docker_installations
-  failed_when: (remove_old_docker_installations.failed) and
-               (not remove_old_docker_installations.msg|search('No\ package\(s\)\ matching.*available'))
   become: yes
   tags: ["docker","apt"]
+  with_items:
+    - "lxc-docker"
+    - "docker.io"
+    - "docker-engine"
+    - "docker"
 
 - name: Install docker community edition
   apt:
