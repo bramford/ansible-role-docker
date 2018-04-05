@@ -30,7 +30,8 @@
     version: "{{ docker_pip_version|default(omit) }}"
     state: present
   become: yes
-  when: docker_pip_py|bool
+  when: (docker_pip_py|bool) and
+        (not docker_pip_compose|bool)
   tags: ["docker","pip"]
 
 - name: Install docker-compose with pip
