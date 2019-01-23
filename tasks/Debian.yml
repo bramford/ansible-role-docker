@@ -20,11 +20,20 @@
   become: yes
   tags: ["docker","apt"]
 
-- name: Install pip with easy_install
-  easy_install:
-    name: "pip"
+- name: Get pip installer script
+  get_url:
+    url: "https://bootstrap.pypa.io/get-pip.py"
+    dest: /usr/local/sbin/
   become: yes
-  tags: ["docker","apt"]
+  register: get_pip_installer_script
+  tags: ["docker", "pip"]
+
+- name: Install pip
+  shell: >
+    python /usr/local/sbin/get-pip.py
+  become: yes
+  when: get_pip_installer_script.changed
+  tags: ["docker", "pip"]
 
 - name: Remove old docker apt source(s)
   lineinfile:
