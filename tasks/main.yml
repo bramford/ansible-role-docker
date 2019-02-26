@@ -39,7 +39,7 @@
     version: "{{ docker_pip_compose_version|default(omit) }}"
     state: present
   become: yes
-  when: docker_pip_compose|bool == True
+  when: docker_pip_compose|bool
   tags: ["docker","pip","docker-compose"]
 
 - name: Correct docker-compose executable permission
@@ -47,7 +47,7 @@
     path: /usr/local/bin/docker-compose
     mode: 0777
   become: yes
-  when: docker_pip_compose|bool == True
+  when: docker_pip_compose|bool
   tags: ["docker","docker-compose"]
 
 - name: Configure dockerd systemd config
@@ -60,7 +60,7 @@
     - restart docker
   when: (ansible_service_mgr == "systemd") and
         (docker_startup_options is defined) and
-        (docker_startup_options != "")
+        (docker_startup_options)
   tags: ["docker","configuration"]
 
 - name: Configure docker metrics publishing

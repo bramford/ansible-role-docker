@@ -44,7 +44,7 @@
   apt:
     update_cache: yes
   become: yes
-  when: add_docker_apt_source.changed == True
+  when: add_docker_apt_source is changed
   tags: ["docker","apt","skip_ansible_lint"]
 
 - name: Purge old docker installations
@@ -56,8 +56,8 @@
     - "lxc-docker*"
     - "docker.io*"
   register: purge_old_docker_installations
-  failed_when: (purge_old_docker_installations.failed == True) and
-               (purge_old_docker_installations.msg|search('No\ package\(s\)\ matching.*available') == False)
+  failed_when: (purge_old_docker_installations is failed) and
+               (purge_old_docker_installations.msg is not search('No\ package\(s\)\ matching.*available'))
   become: yes
   tags: ["docker","apt"]
 

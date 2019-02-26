@@ -11,7 +11,7 @@
   yum:
     update_cache: yes
   become: yes
-  when: add_docker_repo.changed == True
+  when: add_docker_repo is changed
   tags: ["docker","yum","skip_ansible_lint"]
 
 - name: Install docker with yum

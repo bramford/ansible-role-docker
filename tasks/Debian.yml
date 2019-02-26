@@ -1,16 +1,15 @@
 ---
 - name: Install dependency packages
   apt:
-    name: "{{ item }}"
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - python-setuptools
+      - curl
+      - gnupg2
+      - software-properties-common
     state: present
   become: yes
-  with_items:
-    - apt-transport-https
-    - ca-certificates
-    - python-setuptools
-    - curl
-    - gnupg2
-    - software-properties-common
   tags: ["docker","apt"]
 
 - name: Remove default python-pip
@@ -70,15 +69,14 @@
 
 - name: Remove old docker installations
   apt:
-    name: "{{ item }}"
+    name:
+      - lxc-docker
+      - docker.io
+      - docker-engine
+      - docker
     state: absent
   become: yes
   tags: ["docker","apt"]
-  with_items:
-    - "lxc-docker"
-    - "docker.io"
-    - "docker-engine"
-    - "docker"
 
 - name: Install docker community edition
   apt:

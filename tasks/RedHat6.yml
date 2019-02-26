@@ -20,5 +20,5 @@
   become: yes
   notify: restart docker
   when: (docker_startup_options is defined) and
-        (docker_startup_options != "")
+        (docker_startup_options)
   tags: ["docker","configuration"]
