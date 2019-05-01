@@ -1,4 +1,11 @@
 {
+{% if docker_metrics_enabled %}
+    "ipv6": true,
+    "fixed-cidr-v6": "2001:db8:1::/64",
     "metrics-addr" : "127.0.0.1:{{ docker_metrics_port }}",
     "experimental" : true
+{% else %}
+    "ipv6": true,
+    "fixed-cidr-v6": "2001:db8:1::/64"
+{% endif %}
 }

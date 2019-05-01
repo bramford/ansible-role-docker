@@ -63,14 +63,13 @@
         (docker_startup_options)
   tags: ["docker","configuration"]
 
-- name: Configure docker metrics publishing
+- name: Configure docker metrics publishing and IPv6 support
   template:
     src: docker-daemon.json.j2
     dest: /etc/docker/daemon.json
   become: yes
   notify:
     - restart docker
-  when: docker_metrics_enabled
   tags: ["docker","configuration"]
 
 - name: Create docker group
