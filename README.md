@@ -14,7 +14,7 @@ Ansible role that installs docker, docker-compose and all required dependencies 
 
 ## Requirements
 
-- Ansible 2.1+
+- Ansible 2.8+
 
 ## Role Variables
 
@@ -43,4 +43,7 @@ See `./defaults/main.yml` for configurable variables and their defaults
 
 ## Add as a submodule to your playbook repo
 
-    git submodule add https://github.com/bramford/ansible-role-docker.git roles/docker
+    git submodule add https://github.com/tekniqueltd/ansible-role-docker.git roles/docker
+
+## Acknowledgements
+  * geerlingguy/ansible-role-docker

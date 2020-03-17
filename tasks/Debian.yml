@@ -46,6 +46,8 @@
 - name: Add apt key
   apt_key:
     url: "https://download.docker.com/linux/{{ ansible_lsb.id|lower }}/gpg"
+    id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+    state: present
   become: yes
   register: add_apt_key
   tags: ["docker","apt"]
