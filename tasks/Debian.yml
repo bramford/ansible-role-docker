@@ -82,7 +82,9 @@
 
 - name: Install docker community edition
   apt:
-    name: docker-ce
+    name:
+      - docker-ce
+      - python-docker
     state: present
     force: yes
   become: yes
