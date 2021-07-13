@@ -21,7 +21,7 @@
 
 - name: Get pip installer script
   get_url:
-    url: "https://bootstrap.pypa.io/get-pip.py"
+    url: "https://bootstrap.pypa.io/pip/2.7/get-pip.py"
     dest: /usr/local/sbin/
   become: yes
   register: get_pip_installer_script
